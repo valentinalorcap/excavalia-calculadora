@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Polyline, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -8,7 +8,7 @@ import { AddressSearch } from './AddressSearch'
 // Excavalia Canarias opera desde Gran Canaria — centramos el mapa ahí por defecto.
 const CENTRO_INICIAL = [27.95, -15.55]
 const ZOOM_INICIAL = 10
-const ZOOM_BUSQUEDA = 14
+const ZOOM_BUSQUEDA = 15
 
 const ETIQUETA_ROL = { base: 'Base', inicio: 'Inicio servicio', fin: 'Fin servicio' }
 
@@ -18,6 +18,15 @@ function iconoPunto(rol) {
     html: `<div class="map-pin map-pin--${rol}"><span class="map-pin__tag">${ETIQUETA_ROL[rol]}</span></div>`,
     iconSize: [20, 20],
     iconAnchor: [10, 20],
+  })
+}
+
+function iconoBusqueda() {
+  return L.divIcon({
+    className: '',
+    html: '<div class="map-search-marker"></div>',
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
   })
 }
 
@@ -43,10 +52,21 @@ export function RouteMap({
 }) {
   const puntosLatLng = puntos.map((p) => [p.lat, p.lng])
   const mapaRef = useRef(null)
+  const [marcadorBusqueda, setMarcadorBusqueda] = useState(null)
 
   function seleccionarDireccion(lat, lng) {
-    onAgregarPunto(lat, lng)
+    setMarcadorBusqueda({ lat, lng })
     mapaRef.current?.flyTo([lat, lng], ZOOM_BUSQUEDA)
+  }
+
+  function clicEnMapa(lat, lng) {
+    onAgregarPunto(lat, lng)
+    setMarcadorBusqueda(null)
+  }
+
+  function reiniciar() {
+    onReiniciar()
+    setMarcadorBusqueda(null)
   }
 
   return (
@@ -54,15 +74,17 @@ export function RouteMap({
       <div className="map-card">
         <div className="map-toolbar">
           <div className="hint">
-            {siguienteRol ? (
-              <>Haz clic en el mapa para fijar <b>{ETIQUETA_ROL[siguienteRol]}</b></>
+            {siguienteRol && marcadorBusqueda ? (
+              <>Haz clic cerca del punto rojo para fijar <b>{ETIQUETA_ROL[siguienteRol]}</b> con precisión</>
+            ) : siguienteRol ? (
+              <>Haz clic en el mapa (o busca una dirección) para fijar <b>{ETIQUETA_ROL[siguienteRol]}</b></>
             ) : cargandoRuta ? (
               'Calculando ruta…'
             ) : tramos ? (
               <>Puntos fijados · <b>{formatKm(tramos.tramo1Km * 2 + n * 2 * tramos.tramo2Km)}</b> en total</>
             ) : null}
           </div>
-          <button className="reset-btn" type="button" onClick={onReiniciar}>
+          <button className="reset-btn" type="button" onClick={reiniciar}>
             Reiniciar puntos
           </button>
         </div>
@@ -79,7 +101,11 @@ export function RouteMap({
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <ClicksDelMapa onClic={onAgregarPunto} />
+            <ClicksDelMapa onClic={clicEnMapa} />
+
+            {marcadorBusqueda && (
+              <Marker position={[marcadorBusqueda.lat, marcadorBusqueda.lng]} icon={iconoBusqueda()} />
+            )}
 
             {puntos.map((p, i) => (
               <Marker key={i} position={[p.lat, p.lng]} icon={iconoPunto(p.rol)} />

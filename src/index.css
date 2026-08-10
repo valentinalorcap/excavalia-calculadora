@@ -452,6 +452,16 @@ h3 {
   flex-wrap: wrap;
 }
 
+/* marcador temporal del resultado de búsqueda, antes de fijar el punto real con un clic */
+.map-search-marker {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #d3241d;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 5px rgba(211, 36, 29, 0.28), 0 2px 4px rgba(20, 18, 10, 0.3);
+}
+
 /* pines del mapa (Leaflet divIcon) */
 .map-pin {
   width: 16px;

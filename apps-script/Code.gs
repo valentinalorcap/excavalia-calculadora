@@ -7,7 +7,10 @@
  * por eso se abre siempre por ID, guardado como propiedad del script.
  *
  * Endpoints expuestos (al desplegar como aplicación web):
- *   GET  -> tarifas por tipo de transporte y configuración general
+ *   GET  ?buscar=<texto>  -> búsqueda de direcciones (proxy a Nominatim, que
+ *                            no admite llamadas directas desde el navegador
+ *                            por no dar cabeceras CORS)
+ *   GET  (sin parámetros) -> tarifas por tipo de transporte y configuración general
  *   POST -> ruta real (distancia, tiempo, desnivel) entre los puntos del mapa,
  *           vía OpenRouteService
  *
@@ -18,12 +21,40 @@
 const HOJA_TIPOS = 'TiposTransporte'
 const HOJA_CONFIG = 'Config'
 const PERFIL_ORS = 'driving-hgv' // vehículo pesado: evita restricciones no aptas para camiones
+const VIEWBOX_CANARIAS = '-18.5,29.5,-13.0,27.0'
 
-function doGet() {
+function doGet(e) {
+  const consulta = e && e.parameter && e.parameter.buscar
+  if (consulta) {
+    return responderJSON({ resultados: buscarDireccionNominatim(consulta) })
+  }
+
   return responderJSON({
     tipos: leerTiposTransporte(),
     config: leerConfig(),
   })
+}
+
+function buscarDireccionNominatim(consulta) {
+  const parametros = {
+    format: 'json',
+    q: consulta,
+    limit: '5',
+    countrycodes: 'es',
+    viewbox: VIEWBOX_CANARIAS,
+    bounded: '1',
+  }
+  const queryString = Object.keys(parametros)
+    .map((clave) => `${clave}=${encodeURIComponent(parametros[clave])}`)
+    .join('&')
+
+  const respuesta = UrlFetchApp.fetch(`https://nominatim.openstreetmap.org/search?${queryString}`, {
+    headers: { 'User-Agent': 'ExcavaliaCalculadora/1.0 (+https://valentinalorcap.github.io/excavalia-calculadora/)' },
+    muteHttpExceptions: true,
+  })
+
+  const datos = JSON.parse(respuesta.getContentText())
+  return datos.map((r) => ({ etiqueta: r.display_name, lat: Number(r.lat), lng: Number(r.lon) }))
 }
 
 // Recibe { puntos: [base, inicio, fin] } (cada uno con lat/lng) y devuelve
