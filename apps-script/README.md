@@ -33,13 +33,19 @@ Estos son los mismos valores de ejemplo que trae la app por defecto (`src/config
 2. Borra el contenido de `Código.gs` que viene por defecto y pega el de `apps-script/Code.gs` de este repo.
 3. Abre `appsscript.json` desde el icono de engranaje (⚙️ Configuración del proyecto → "Mostrar archivo appsscript.json") y sustitúyelo por el de `apps-script/appsscript.json` de este repo.
 
-## 3. Configurar la clave de OpenRouteService
+## 3. Configurar las propiedades del script
 
-El script llama a OpenRouteService (perfil `driving-hgv`, pensado para vehículos pesados) para calcular la ruta real de cada tramo. La clave **nunca va en el código** — se guarda como propiedad del script:
+El script necesita dos propiedades (nunca van en el código, se guardan aparte):
 
 1. En el editor de Apps Script: **⚙️ Configuración del proyecto** (icono de engranaje, panel izquierdo).
-2. Baja hasta **Propiedades del script → Añadir propiedad de script**.
-3. Propiedad: `ORS_API_KEY` — Valor: tu clave de openrouteservice.org.
+2. Baja hasta **Propiedades del script → Añadir propiedad de script** y añade estas dos:
+
+   | Propiedad      | Valor                                                                 |
+   |-----------------|------------------------------------------------------------------------|
+   | `SHEET_ID`      | El ID de la Sheet: la parte de la URL entre `/d/` y `/edit` (ej. `https://docs.google.com/spreadsheets/d/`**`1AbCdEf...`**`/edit`) |
+   | `ORS_API_KEY`   | Tu clave de openrouteservice.org                                       |
+
+`SHEET_ID` es necesario aunque el script esté vinculado a la propia hoja: `SpreadsheetApp.getActiveSpreadsheet()` no funciona de forma fiable cuando el script corre como aplicación web, así que el código siempre abre la hoja explícitamente por ID.
 
 ## 4. Desplegar como aplicación web
 

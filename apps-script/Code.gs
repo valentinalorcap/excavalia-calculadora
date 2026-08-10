@@ -1,10 +1,10 @@
 /**
  * Backend de la calculadora de precios de Excavalia Canarias.
  *
- * Este script va vinculado a la Google Sheet que contiene las tarifas
- * (Extensiones > Apps Script desde la propia hoja), así que
- * SpreadsheetApp.getActiveSpreadsheet() ya apunta a la hoja correcta
- * sin necesidad de guardar ningún ID.
+ * Aunque el script esté vinculado a la Sheet (Extensiones > Apps Script),
+ * SpreadsheetApp.getActiveSpreadsheet() no es fiable cuando el script se
+ * ejecuta como aplicación web (no hay una "hoja activa" en ese contexto) —
+ * por eso se abre siempre por ID, guardado como propiedad del script.
  *
  * Endpoints expuestos (al desplegar como aplicación web):
  *   GET  -> tarifas por tipo de transporte y configuración general
@@ -12,7 +12,7 @@
  *           vía OpenRouteService
  *
  * Ver apps-script/README.md para las instrucciones de despliegue y para
- * configurar la clave de OpenRouteService.
+ * configurar la clave de OpenRouteService y el ID de la Sheet.
  */
 
 const HOJA_TIPOS = 'TiposTransporte'
@@ -75,8 +75,16 @@ function consultarRutaORS(origen, destino) {
   }
 }
 
+function obtenerSpreadsheet() {
+  const id = PropertiesService.getScriptProperties().getProperty('SHEET_ID')
+  if (!id) {
+    throw new Error('Falta configurar la propiedad de script SHEET_ID (ver apps-script/README.md).')
+  }
+  return SpreadsheetApp.openById(id)
+}
+
 function leerTiposTransporte() {
-  const hoja = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_TIPOS)
+  const hoja = obtenerSpreadsheet().getSheetByName(HOJA_TIPOS)
   const filas = hoja.getDataRange().getValues()
   const cabecera = filas[0]
   const tipos = {}
@@ -98,7 +106,7 @@ function leerTiposTransporte() {
 }
 
 function leerConfig() {
-  const hoja = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_CONFIG)
+  const hoja = obtenerSpreadsheet().getSheetByName(HOJA_CONFIG)
   const filas = hoja.getDataRange().getValues()
   const config = {}
 
