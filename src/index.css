@@ -374,6 +374,8 @@ h3 {
 
 /* ---------- buscador de direcciones ---------- */
 .map-search-row {
+  position: relative;
+  z-index: 10; /* por encima de las capas internas de Leaflet (controles a z-index 1000) */
   padding: 10px 16px;
   border-bottom: 1px solid var(--line);
 }

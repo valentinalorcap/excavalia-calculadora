@@ -100,8 +100,8 @@ export function RouteMap({
                 positions={tramos?.tramo2Ruta ?? [puntosLatLng[1], puntosLatLng[2]]}
                 pathOptions={
                   tramos?.tramo2Ruta
-                    ? { color: '#c99a05', weight: 4 }
-                    : { color: '#c99a05', dashArray: '1 6', weight: 3, lineCap: 'round' }
+                    ? { color: '#1d5fd6', weight: 4 }
+                    : { color: '#1d5fd6', dashArray: '1 6', weight: 3, lineCap: 'round' }
                 }
               />
             )}
