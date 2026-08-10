@@ -1,11 +1,14 @@
+import { useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Polyline, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { formatKm } from '../lib/format'
+import { AddressSearch } from './AddressSearch'
 
 // Excavalia Canarias opera desde Gran Canaria — centramos el mapa ahí por defecto.
 const CENTRO_INICIAL = [27.95, -15.55]
 const ZOOM_INICIAL = 10
+const ZOOM_BUSQUEDA = 14
 
 const ETIQUETA_ROL = { base: 'Base', inicio: 'Inicio servicio', fin: 'Fin servicio' }
 
@@ -39,6 +42,12 @@ export function RouteMap({
   cargandoRuta,
 }) {
   const puntosLatLng = puntos.map((p) => [p.lat, p.lng])
+  const mapaRef = useRef(null)
+
+  function seleccionarDireccion(lat, lng) {
+    onAgregarPunto(lat, lng)
+    mapaRef.current?.flyTo([lat, lng], ZOOM_BUSQUEDA)
+  }
 
   return (
     <div className="col-map">
@@ -58,8 +67,14 @@ export function RouteMap({
           </button>
         </div>
 
+        {siguienteRol && (
+          <div className="map-search-row">
+            <AddressSearch etiquetaSiguiente={ETIQUETA_ROL[siguienteRol]} onSeleccionar={seleccionarDireccion} />
+          </div>
+        )}
+
         <div className="map-area">
-          <MapContainer center={CENTRO_INICIAL} zoom={ZOOM_INICIAL} scrollWheelZoom style={{ height: '420px', width: '100%' }}>
+          <MapContainer ref={mapaRef} center={CENTRO_INICIAL} zoom={ZOOM_INICIAL} scrollWheelZoom style={{ height: '420px', width: '100%' }}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
