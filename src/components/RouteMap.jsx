@@ -71,10 +71,24 @@ export function RouteMap({
             ))}
 
             {puntos.length >= 2 && (
-              <Polyline positions={[puntosLatLng[0], puntosLatLng[1]]} pathOptions={{ color: '#15140f', dashArray: '6 4', weight: 3 }} />
+              <Polyline
+                positions={tramos?.tramo1Ruta ?? [puntosLatLng[0], puntosLatLng[1]]}
+                pathOptions={
+                  tramos?.tramo1Ruta
+                    ? { color: '#15140f', weight: 4 }
+                    : { color: '#15140f', dashArray: '6 4', weight: 3 }
+                }
+              />
             )}
             {puntos.length >= 3 && (
-              <Polyline positions={[puntosLatLng[1], puntosLatLng[2]]} pathOptions={{ color: '#c99a05', dashArray: '1 6', weight: 3, lineCap: 'round' }} />
+              <Polyline
+                positions={tramos?.tramo2Ruta ?? [puntosLatLng[1], puntosLatLng[2]]}
+                pathOptions={
+                  tramos?.tramo2Ruta
+                    ? { color: '#c99a05', weight: 4 }
+                    : { color: '#c99a05', dashArray: '1 6', weight: 3, lineCap: 'round' }
+                }
+              />
             )}
           </MapContainer>
         </div>

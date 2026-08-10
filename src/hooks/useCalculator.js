@@ -52,6 +52,8 @@ export function useCalculator(tipos, config) {
           tramo2Min: real.tramo2.minutos,
           tramo1AscensoM: real.tramo1.ascensoM,
           tramo2AscensoM: real.tramo2.ascensoM,
+          tramo1Ruta: real.tramo1.ruta,
+          tramo2Ruta: real.tramo2.ruta,
         })
         setOrigenTramos('openrouteservice')
       } else {

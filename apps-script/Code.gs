@@ -69,10 +69,15 @@ function consultarRutaORS(origen, destino) {
   }
 
   const propiedades = datos.features[0].properties
+  // geometry.coordinates viene como [lng, lat, elevación] por punto de la
+  // carretera real; lo pasamos como [lat, lng] para dibujarlo directo en Leaflet.
+  const ruta = datos.features[0].geometry.coordinates.map((c) => [c[1], c[0]])
+
   return {
     km: propiedades.summary.distance / 1000,
     minutos: propiedades.summary.duration / 60,
     ascensoM: propiedades.ascent || 0,
+    ruta: ruta,
   }
 }
 
