@@ -30,6 +30,7 @@ export function TransportTypeSelector({ tipos, tipo, onChange }) {
             <span><b>{Number(config.tarifaKm).toFixed(2)} €</b>/km</span>
             <span><b>{config.tarifaHora} €</b>/h</span>
             <span>base <b>{config.tarifaBase} €</b></span>
+            <span>mínima <b>{config.tarifaMinima} €</b></span>
             <span><b>{config.consumoBase}</b> L/100km</span>
           </>
         ) : (

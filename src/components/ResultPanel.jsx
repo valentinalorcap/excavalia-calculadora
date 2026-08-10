@@ -1,6 +1,6 @@
 import { formatEUR, formatKm, formatTiempo } from '../lib/format'
 
-export function ResultPanel({ resultado, tarifaMinima }) {
+export function ResultPanel({ resultado }) {
   return (
     <div className="result-band">
       <div className="result-inner">
@@ -8,7 +8,7 @@ export function ResultPanel({ resultado, tarifaMinima }) {
           <div className="price-lbl">Precio del servicio</div>
           <div className="price">{resultado ? formatEUR(resultado.precioFinal) : '— €'}</div>
           <div className="min-note">
-            {resultado?.aplicaMinima ? `Se aplica la tarifa mínima de ${formatEUR(tarifaMinima)}` : ''}
+            {resultado?.aplicaMinima ? `Se aplica la tarifa mínima de ${formatEUR(resultado.tarifaMinima)}` : ''}
           </div>
         </div>
         <div className="result-divider" />

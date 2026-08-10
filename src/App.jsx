@@ -43,7 +43,7 @@ function App() {
         </div>
       </div>
 
-      <ResultPanel resultado={calc.resultado} tarifaMinima={calc.tarifaMinima} />
+      <ResultPanel resultado={calc.resultado} />
 
       <p className="foot-note">
         Tarifas: {fuente === 'sheet' ? 'leídas de la Google Sheet en vivo.' : 'de ejemplo (aún no hay Apps Script conectado, ver .env.example).'}

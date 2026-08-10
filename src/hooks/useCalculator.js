@@ -100,6 +100,5 @@ export function useCalculator(tipos, config) {
     cargandoRuta,
     resultado,
     calcular,
-    tarifaMinima: config.tarifaMinima,
   }
 }

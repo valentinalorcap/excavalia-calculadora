@@ -8,20 +8,19 @@ Crea una hoja nueva en Google Sheets con dos pestañas:
 
 ### Pestaña `TiposTransporte`
 
-| clave       | etiqueta                  | consumoBase | factorPendiente | tarifaKm | tarifaHora | tarifaBase |
-|-------------|----------------------------|-------------|------------------|----------|------------|------------|
-| plancha     | Plancha porta vehículo     | 38          | 0.9              | 1.85     | 42         | 60         |
-| banera      | Bañera (áridos)             | 42          | 1.1              | 1.95     | 45         | 65         |
-| multilift   | Multilift (cubetas)         | 35          | 0.8              | 1.70     | 38         | 55         |
-| furgo       | Furgo                       | 12          | 0.3              | 0.95     | 28         | 35         |
+| clave       | etiqueta                  | consumoBase | factorPendiente | tarifaKm | tarifaHora | tarifaBase | tarifaMinima |
+|-------------|----------------------------|-------------|------------------|----------|------------|------------|--------------|
+| plancha     | Plancha porta vehículo     | 38          | 0.9              | 1.85     | 42         | 60         | 90           |
+| banera      | Bañera (áridos)             | 42          | 1.1              | 1.95     | 45         | 65         | 90           |
+| multilift   | Multilift (cubetas)         | 35          | 0.8              | 1.70     | 38         | 55         | 75           |
+| furgo       | Furgo                       | 12          | 0.3              | 0.95     | 28         | 35         | 50           |
 
-(`consumoBase` en L/100km, `factorPendiente` en litros extra por cada 100m de ascenso, `tarifaKm`/`tarifaHora`/`tarifaBase` en €.)
+(`consumoBase` en L/100km, `factorPendiente` en litros extra por cada 100m de ascenso, `tarifaKm`/`tarifaHora`/`tarifaBase`/`tarifaMinima` en €. `tarifaMinima` es el precio mínimo que se cobra por un servicio con ese tipo de transporte — es por vehículo/tipo, no una cifra única para todos.)
 
 ### Pestaña `Config`
 
 | clave              | valor |
 |---------------------|-------|
-| tarifaMinima         | 90    |
 | velocidadMediaKmh    | 45    |
 | jornadaHoras         | 8     |
 
