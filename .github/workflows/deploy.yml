@@ -32,6 +32,8 @@ jobs:
 
       - name: Compilar la app
         run: npm run build
+        env:
+          VITE_APPS_SCRIPT_URL: ${{ secrets.VITE_APPS_SCRIPT_URL }}
 
       - name: Preparar el artefacto de Pages
         uses: actions/upload-pages-artifact@v3
