@@ -1,6 +1,7 @@
-// La búsqueda de direcciones pasa por Apps Script (que a su vez consulta
-// Nominatim) porque Nominatim no responde con cabeceras CORS y el
-// navegador bloquearía una llamada directa desde el frontend.
+// La búsqueda de direcciones pasa por Apps Script (que a su vez consulta el
+// geocodificador de OpenRouteService) — llamarlo directo desde el navegador
+// no es una opción: Nominatim no da cabeceras CORS, y la clave de ORS no
+// puede quedar expuesta en el frontend.
 const URL_APPS_SCRIPT = import.meta.env.VITE_APPS_SCRIPT_URL
 
 export async function buscarDireccion(consulta) {

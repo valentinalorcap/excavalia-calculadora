@@ -46,6 +46,8 @@ El script necesita dos propiedades (nunca van en el código, se guardan aparte):
 
 `SHEET_ID` es necesario aunque el script esté vinculado a la propia hoja: `SpreadsheetApp.getActiveSpreadsheet()` no funciona de forma fiable cuando el script corre como aplicación web, así que el código siempre abre la hoja explícitamente por ID.
 
+El token de openrouteservice.org tiene servicios independientes (Directions, Geocoding, Isochrones...) que hay que habilitar por separado en tu [panel de ORS](https://openrouteservice.org/dev/#/home) — si la búsqueda de direcciones o las rutas devuelven "Access to this API has been disallowed", revisa ahí que el servicio correspondiente esté activo para tu token.
+
 ## 4. Desplegar como aplicación web
 
 1. **Desplegar → Nueva implementación**.
