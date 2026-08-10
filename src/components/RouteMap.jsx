@@ -35,6 +35,8 @@ export function RouteMap({
   n,
   onNChange,
   tramos,
+  origenTramos,
+  cargandoRuta,
 }) {
   const puntosLatLng = puntos.map((p) => [p.lat, p.lng])
 
@@ -45,6 +47,8 @@ export function RouteMap({
           <div className="hint">
             {siguienteRol ? (
               <>Haz clic en el mapa para fijar <b>{ETIQUETA_ROL[siguienteRol]}</b></>
+            ) : cargandoRuta ? (
+              'Calculando ruta…'
             ) : tramos ? (
               <>Puntos fijados · <b>{formatKm(tramos.tramo1Km * 2 + n * 2 * tramos.tramo2Km)}</b> en total</>
             ) : null}
@@ -93,7 +97,13 @@ export function RouteMap({
 
         <div className="map-legend">
           <span>◆ negro — base · ◆ dorado — inicio / fin de servicio</span>
-          <span>Distancia estimada en línea recta — pendiente de conectar OpenRouteService para la ruta real</span>
+          <span>
+            {origenTramos === 'openrouteservice'
+              ? 'Ruta real por carretera (OpenRouteService)'
+              : origenTramos === 'estimado'
+                ? 'Estimación en línea recta — no se pudo consultar OpenRouteService'
+                : 'La ruta se calcula al fijar los 3 puntos'}
+          </span>
         </div>
       </div>
     </div>

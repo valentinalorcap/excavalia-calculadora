@@ -37,6 +37,8 @@ function App() {
             n={calc.n}
             onNChange={calc.setN}
             tramos={calc.tramos}
+            origenTramos={calc.origenTramos}
+            cargandoRuta={calc.cargandoRuta}
           />
         </div>
       </div>
@@ -44,9 +46,7 @@ function App() {
       <ResultPanel resultado={calc.resultado} tarifaMinima={calc.tarifaMinima} />
 
       <p className="foot-note">
-        Tarifas: {fuente === 'sheet' ? 'leídas de la Google Sheet en vivo.' : 'de ejemplo (aún no hay Apps Script conectado, ver .env.example).'}{' '}
-        La distancia se calcula en línea recta con un factor de corrección hasta conectar OpenRouteService a
-        través de Apps Script para la ruta real por carretera y el desnivel.
+        Tarifas: {fuente === 'sheet' ? 'leídas de la Google Sheet en vivo.' : 'de ejemplo (aún no hay Apps Script conectado, ver .env.example).'}
       </p>
     </>
   )

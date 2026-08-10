@@ -33,7 +33,15 @@ Estos son los mismos valores de ejemplo que trae la app por defecto (`src/config
 2. Borra el contenido de `Código.gs` que viene por defecto y pega el de `apps-script/Code.gs` de este repo.
 3. Abre `appsscript.json` desde el icono de engranaje (⚙️ Configuración del proyecto → "Mostrar archivo appsscript.json") y sustitúyelo por el de `apps-script/appsscript.json` de este repo.
 
-## 3. Desplegar como aplicación web
+## 3. Configurar la clave de OpenRouteService
+
+El script llama a OpenRouteService (perfil `driving-hgv`, pensado para vehículos pesados) para calcular la ruta real de cada tramo. La clave **nunca va en el código** — se guarda como propiedad del script:
+
+1. En el editor de Apps Script: **⚙️ Configuración del proyecto** (icono de engranaje, panel izquierdo).
+2. Baja hasta **Propiedades del script → Añadir propiedad de script**.
+3. Propiedad: `ORS_API_KEY` — Valor: tu clave de openrouteservice.org.
+
+## 4. Desplegar como aplicación web
 
 1. **Desplegar → Nueva implementación**.
 2. Tipo: **Aplicación web**.
@@ -41,9 +49,9 @@ Estos son los mismos valores de ejemplo que trae la app por defecto (`src/config
 4. Quién tiene acceso: **Cualquier usuario**.
 5. Copia la URL que te da (termina en `/exec`).
 
-> El endpoint solo expone las tarifas de la Sheet (no datos de clientes), por eso el acceso público al endpoint no es un problema — la restricción de acceso a la calculadora en sí la hace el login por correo en el frontend, que es un paso aparte.
+> El endpoint de tarifas (`GET`) y el de rutas (`POST`) son públicos por URL — no exponen datos de clientes, solo tarifas y cálculos de ruta. La restricción de acceso a la calculadora en sí la hace el login por correo en el frontend, que es un paso aparte (ver más abajo). Al ser público, cualquiera con la URL podría consumir tu cuota de OpenRouteService si la URL se filtra — otra razón más para priorizar el login.
 
-## 4. Conectar el frontend
+## 5. Conectar el frontend
 
 En la raíz del repo, copia `.env.example` a `.env.local` y pega la URL:
 
@@ -51,9 +59,8 @@ En la raíz del repo, copia `.env.example` a `.env.local` y pega la URL:
 VITE_APPS_SCRIPT_URL=https://script.google.com/macros/s/AKfycb.../exec
 ```
 
-Reinicia `npm run dev` — el pie de página de la app debe pasar de "tarifas de ejemplo" a "leídas de la Google Sheet en vivo".
+Reinicia `npm run dev` — el pie de página debe pasar de "tarifas de ejemplo" a "leídas de la Google Sheet en vivo", y la leyenda del mapa (tras fijar los 3 puntos) debe decir "Ruta real por carretera (OpenRouteService)" en vez de "Estimación en línea recta".
 
 ## Pendiente (no implementado todavía)
 
-- **OpenRouteService**: hoy la distancia se calcula en línea recta con un factor de corrección (`src/lib/geo.js`). Falta añadir un `doPost` en `Code.gs` que reciba los 3 puntos del mapa y llame a la API de OpenRouteService (guardando la API key en Propiedades del script, no en el código) para devolver distancia, tiempo y desnivel reales.
-- **Login por correo**: el endpoint actual es de solo lectura y público. Cuando se añada el login con Google en el frontend, este script deberá validar el correo autenticado contra una lista de personal autorizado antes de responder.
+- **Login por correo**: los dos endpoints son de solo lectura y públicos. Cuando se añada el login con Google en el frontend, este script deberá validar el correo autenticado contra una lista de personal autorizado antes de responder — importante también para no dejar la cuota de OpenRouteService expuesta a cualquiera.
