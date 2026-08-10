@@ -64,7 +64,8 @@ function consultarRutaORS(origen, destino) {
 
   const datos = JSON.parse(respuesta.getContentText())
   if (datos.error) {
-    throw new Error(datos.error.message || 'Error de OpenRouteService')
+    const mensaje = typeof datos.error === 'string' ? datos.error : datos.error.message
+    throw new Error(`OpenRouteService: ${mensaje || 'error desconocido'}`)
   }
 
   const propiedades = datos.features[0].properties
